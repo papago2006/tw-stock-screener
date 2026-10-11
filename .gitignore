@@ -1,0 +1,14 @@
+.tmp/
+.venv/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+**/data/
+**/output/
+**/release/
+**/local.yaml
+.env
+.env.*
+*.sqlite3*
+*.db
+*.log

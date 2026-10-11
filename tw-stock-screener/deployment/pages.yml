@@ -1,0 +1,34 @@
+# Copy to repository root .github/workflows/pages.yml after review.
+# Publishes an existing static report. No quote download or daily schedule.
+name: Publish mobile report
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout reviewed files
+        uses: actions/checkout@v6
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static report only
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: tw-stock-screener/site
+      - name: Deploy report
+        id: deployment
+        uses: actions/deploy-pages@v4

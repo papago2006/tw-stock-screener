@@ -1,0 +1,19 @@
+{
+  "twse_day": {
+    "sha256_full_response": "537c4bec0b8da0770d5c13d5a3a06a9560374cc5131b24427aa6c576f4082873",
+    "retained_codes": [
+      "0050",
+      "2330",
+      "9105"
+    ],
+    "date": "2025-09-30"
+  },
+  "tpex_day": {
+    "sha256_full_response": "23bcef3758e91a945ee9dd382987f86db1a97ecb6f2cc5fddd433778ef8b691a",
+    "retained_codes": [
+      "006201",
+      "6488"
+    ],
+    "date": "2025-09-30"
+  }
+}

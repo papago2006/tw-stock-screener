@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tpex_1799_202410.json",
+    "sha256": "ec51d4c52a9b38d0f39d967d642bd84475ada0f94d0c9b54bed9d1ca8e062bf4",
+    "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?response=json&date=2024%2F10%2F01&code=1799",
+    "source": "original overnight official-response archive; not fetched anew"
+  },
+  {
+    "file": "tpex_6971_202510.json",
+    "sha256": "fc6c745a8b64caf1ac56162f527243ccac1e6385411b69b80a816af392e23253",
+    "url": "https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?response=json&date=2025%2F10%2F01&code=6971",
+    "source": "original overnight official-response archive; not fetched anew"
+  }
+]

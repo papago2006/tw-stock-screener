@@ -1,0 +1,23 @@
+selection:
+  top_n: 300
+  volume_ratio: 3.2
+kd:
+  period: 26
+  k_smoothing: 3
+  d_smoothing: 3
+  initial: 50.0
+  warmup_periods: 60
+history:
+  months: 120
+  daily_months: 6
+  weekly_months: 24
+network:
+  timeout: 30
+  attempts: 3
+  interval_seconds: 2.0
+  latest_search_days: 20
+paths:
+  cache: data/market.sqlite3
+  raw: data/raw
+  output: output
+  results: data/results.sqlite3

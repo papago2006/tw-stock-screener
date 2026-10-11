@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tw-stock-screener"
+version = "0.3.0"
+description = "Official TWSE/TPEx daily stock screener with auditable KD"
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0,<7"]
+
+[project.scripts]
+tw-stock-screener = "tw_stock_screener.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

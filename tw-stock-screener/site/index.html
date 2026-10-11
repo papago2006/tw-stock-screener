@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173b32">
+  <meta name="description" content="台灣上市上櫃普通股 KD 選股結果與資料完整性報告">
+  <title>台股選股 · KD 觀察站</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="topbar"><a class="brand" href="./"><img src="icon.svg" width="30" height="30" alt="">台股選股<span>KD 觀察站</span></a><span class="readonly">結果閱覽</span></div>
+  <main>
+    <header class="hero">
+      <div><div class="eyebrow">TWSE + TPEx · 每日收盤選股</div><h1>把符合條件的股票<br>放在同一頁。</h1><p class="subtitle">日、週、月 K > D，成交量放大。</p></div>
+      <div class="datecard"><span>選股交易日</span><strong id="date">—</strong><span id="previous">正在載入已保存結果</span><span id="publication" class="pill pending">待確認</span></div>
+    </header>
+    <section class="notice" aria-label="結果限制"><strong id="notice-title">試算結果</strong><p id="notice">正在載入資料。此頁不會啟動選股或下載行情。</p></section>
+    <section class="metrics" aria-label="處理摘要" id="metrics"></section>
+    <section class="results-section" aria-labelledby="results-title">
+      <div class="section-heading"><div><div class="eyebrow">SCREENING RESULTS</div><h2 id="results-title">入選觀察清單</h2></div><a class="download" href="selected.csv" download>下載入選 CSV ↓</a></div>
+      <div class="controls"><label class="search"><span>搜尋股票</span><input id="search" type="search" placeholder="代號或名稱，例如 6504" autocomplete="off"></label><label><span>顯示範圍</span><select id="filter"><option value="selected">入選股票</option><option value="all">全部候選</option><option value="data_insufficient">資料不足</option><option value="condition_rejected">條件不符</option></select></label></div>
+      <p id="list-count" class="muted" aria-live="polite"></p><div id="stocks" class="stocks"></div><p id="empty" class="empty" hidden>這個範圍沒有符合搜尋的股票。</p>
+    </section>
+    <section class="info-grid">
+      <details class="info" open><summary>這次如何篩選？</summary><ol id="stages"></ol><p id="rules"></p><p class="muted">未還原價格；週、月包含選股日所在的未完成 K 棒；不設最低成交量。</p></details>
+      <details class="info"><summary>資料完整性與驗證</summary><div id="coverage"></div><details><summary>查看排名前資料問題</summary><ul id="ranking-errors"></ul></details></details>
+      <details class="info"><summary>歷史與版本狀態</summary><p id="tracking"></p><p>目前提供單一交易日的結果快照。每日排程、手機啟動選股與版本確認入口尚未接入。</p><p class="muted" id="version"></p><a href="data.json" download>下載公開報表 JSON ↓</a></details>
+      <details class="info"><summary>手機怎麼使用？</summary><p>部署後，以手機瀏覽器開啟固定網址。iPhone 可用 Safari 分享選單「加入主畫面」；Android 可從瀏覽器選單加入主畫面。</p><p>頁面顯示已保存的選股日。重新載入只更新顯示，不會重新計算或批准結果。</p><button id="reload" type="button">重新載入畫面</button></details>
+    </section>
+    <footer><span>台股選股 · 原 KD 策略</span><span id="generated"></span></footer>
+    <noscript><p class="notice">請啟用 JavaScript，或下載公開 JSON／CSV 閱讀結果。</p></noscript>
+  </main>
+</body>
+</html>
