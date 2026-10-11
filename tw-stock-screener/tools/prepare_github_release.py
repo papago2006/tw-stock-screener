@@ -20,6 +20,7 @@ def prepare(project, destination):
         "[CHANGELOG](tw-stock-screener/docs/CHANGELOG.md)。\n\n"
         "[安裝與執行](tw-stock-screener/README.md) · "
         "[發布範圍](tw-stock-screener/docs/DEPLOYMENT.md)\n\n"
+        "[手機報表：台股選股 KD 觀察站](https://papago2006.github.io/tw-stock-screener/)\n\n"
         "手機報表目前為單日、待確認試算快照；尚未接入雲端選股、每日排程或手機確認入口。\n",
         encoding="utf-8")
     (destination / ".gitignore").write_text(

@@ -200,6 +200,16 @@
 - SPEC對應：第14節取代此範圍先前的提交／部署待確認限制；實際提交、workflow及網址驗證成功後另記，不以授權當作執行成功。
 - 備份：工作區.tmp/pages-publish-before-20261011-185309/，保存修改前兩層AGENTS、README、SPEC、CHANGELOG、DEPLOYMENT、PUBLISH_VALIDATION及ARCHITECTURE。選股程式未修改，不重抓行情。
 
+## 2026-10-11 — 程式上傳與公開手機報表部署成功
+
+- 執行依據：SPEC第14節明確上傳及Pages部署授權；沒有新增選股條件或結果approve。
+- 完成：先初始化README，再提交84個發布檔案，主分支提交b8df3a84e51e7c2055e9c25fd3d1cc53a1399ea5。重新clone後84個檔案SHA-256全部符合發布包github-pages-20261011-185431；大型快取、本機設定、日誌、備份與其他專案未上傳。
+- Pages：來源設為GitHub Actions，手動執行Publish mobile report，工作38133838579於2026-10-11台灣時間18:58啟動並成功，總耗時20秒。正式網址為https://papago2006.github.io/tw-stock-screener/；HTTPS與8個網站資產HTTP 200且逐位元組符合發布包。
+- 公開頁面：390×844無水平溢出；搜尋6504顯示1檔、KD明細正常、入選9／全部300／資料不足155／條件不符136，未觀測console錯誤。不是手機實機或外部KD軟體驗收。
+- 文件：README增加手機入口，SPEC、DEPLOYMENT、PUBLISH_VALIDATION及ARCHITECTURE同步實際完成狀態；根README生成模板增加已驗證網址。本機原始程式、行情與結果保留，舊檢閱包不覆寫。
+- 尚未整合：每日雲端選股與排程、手機觸發／確認、快取持久保存、完整歷史報表與ChatGPT查詢；結果仍pending。GitHub平台另提示部分上游Actions以Node24執行與ubuntu-latest即將更換映像，本次部署成功，後續維護追蹤。
+- 驗證紀錄：本次執行遠端檔案、公開資產與瀏覽器檢查；未重跑Python測試，111項為先前發布準備紀錄。原始證據保留本機docs/pages-live-validation-20261011.json與output/pages-live-mobile-20261011.png，不上傳私人截圖或執行日誌。
+
 ## 後續紀錄格式
 
 每筆需求變更記錄：日期與標題、使用者指示或整理檔來源、修改前、修改後、對結果或相容性的影響、SPEC 對應章節、確認狀態。只有實際確認的事項可以標為已確認；本文件不預先建立假想需求。

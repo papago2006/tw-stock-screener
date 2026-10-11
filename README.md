@@ -6,4 +6,6 @@ Python 專案位於 `tw-stock-screener/`。
 
 [安裝與執行](tw-stock-screener/README.md) · [發布範圍](tw-stock-screener/docs/DEPLOYMENT.md)
 
+[手機報表：台股選股 KD 觀察站](https://papago2006.github.io/tw-stock-screener/)
+
 手機報表目前為單日、待確認試算快照；尚未接入雲端選股、每日排程或手機確認入口。

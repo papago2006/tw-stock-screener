@@ -1,6 +1,21 @@
 # 第一個手機報表發布計畫
 
-狀態：使用者已於2026-10-11明確授權程式與本次待確認試算報表上傳及GitHub Pages部署，正在執行。儲存庫已公開，提交前確認無main分支。最新範圍見SPEC第14節；每日選股排程與結果approve不在本次範圍。只有workflow及公開網址驗證成功後才記錄部署完成。
+狀態：2026-10-11依使用者明確授權，程式及待確認試算報表已上傳，GitHub Pages部署成功。手機入口為[台股選股 KD 觀察站](https://papago2006.github.io/tw-stock-screener/)。最新範圍及完成證據見SPEC第14節；每日選股排程與結果approve不在本次範圍。
+
+## 手機現在怎麼使用
+
+用手機瀏覽器開啟上述網址即可，不必登入GitHub，也不需要讓本機電腦開機。可以加入書籤方便下次使用。輸入代號或名稱搜尋，選擇入選／全部候選／資料不足／條件不符，點開卡片查看日週月KD，亦可下載CSV。
+
+目前是2026-10-08單日待確認試算快照，9檔入選；重新整理頁面只讀已發布資料，不啟動選股或更新日期。每日自動選股、手機手動執行、版本確認及跨日追蹤待後續整合。
+
+## 實際發布證據
+
+- 程式與網站提交：b8df3a84e51e7c2055e9c25fd3d1cc53a1399ea5；84個遠端檔案SHA-256與發布包github-pages-20261011-185431一致。
+- [Pages發布工作](https://github.com/papago2006/tw-stock-screener/actions/runs/38133838579)成功，18:58台灣時間啟動，總耗時20秒。來源為GitHub Actions，只有手動workflow_dispatch，沒有選股排程。
+- 正式網址與8個網站資產HTTP 200，資產逐位元組與發布包一致；390×844公開頁面搜尋、KD展開及9／300／155／136分類驗證通過，未觀測console錯誤。非手機實機驗收。
+- 平台提示部分上游Actions原目標Node20、由GitHub以Node24執行，以及ubuntu-latest將切換映像；本次成功，留待後續檢查上游相容更新，不擅改選股規則。
+
+以下保留發布範圍、重建方式與執行步驟，較早狀態敘述為發布前紀錄。
 
 ## 這次發布範圍
 
@@ -64,7 +79,7 @@ repository/
 2. 再次讀取遠端狀態；若已有他人更新，停止覆蓋並先比較。從乾淨發布包上傳main，避免把整個工作區git add。
 3. 目標儲存庫已公開；部署獲授權後，將Pages來源選為GitHub Actions。GitHub Free支援公開儲存庫Pages；未假設使用者目前方案。
 4. 手動執行Publish mobile report。它只上傳tw-stock-screener/site及部署，沒有每日排程或行情API請求。
-5. 以實際workflow成功、部署網址HTTP正常、手機版內容與結果一致作為成功證據。預期專案網址為 `https://papago2006.github.io/tw-stock-screener/`，目前僅預期，尚未部署或確認可用。
+5. 以實際workflow成功、部署網址HTTP正常、手機版內容與結果一致作為成功證據。本次已於上述網址完成驗證；未來重發仍須核對對應版本與工作，不能沿用舊成功紀錄。
 
 Actions模板依2026-10-11官方文件：checkout@v6、configure-pages@v5、upload-pages-artifact@v4、deploy-pages@v4；所需pages及OIDC權限限部署工作。模板目前僅在本機及發布包內，沒有在遠端執行。
 
