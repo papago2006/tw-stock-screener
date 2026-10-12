@@ -2,9 +2,14 @@
 
 ## 2026-10-12新版更新
 
-依SPEC第16節授權，官方OHLC備援新版完整重算與8項離線核對已完成，準備更新同一Pages網址。版本4295d7354ce54d2bbc41dcaee4ef0e76仍待確認；9入選／136條件不符／155資料不足。107筆必要缺價均在官方同日日報仍缺OHLC，補回0；不能宣稱資料已補齊。
+依SPEC第16節授權，官方OHLC備援新版完整重算、8項離線核對及同一Pages網址更新均已完成。版本4295d7354ce54d2bbc41dcaee4ef0e76仍待確認；9入選／136條件不符／155資料不足。107筆必要缺價均在官方同日日報仍缺OHLC，補回0；不能宣稱資料已補齊。
 
 新版網站匯出至`site-recompute-20261012-225856/`，舊`site/`保留。建立新發布包時指定`tools/prepare_github_release.py --site site-recompute-20261012-225856`；發布包中的`tw-stock-screener/site/`才是本次發布目標。完整重算與保留驗證見[RECOMPUTE_20261012.md](RECOMPUTE_20261012.md)。以下2026-10-11內容為首版發布紀錄，不能代替本次部署成功證據。
+
+- 本次程式與報表提交a678a0d26e51d2627223722f313664cc9f8875fa；遠端89檔Git原始內容與發布包SHA-256一致，約1.87MiB，大型行情未上傳。
+- [新版Pages發布工作](https://github.com/papago2006/tw-stock-screener/actions/runs/38269366764)成功，24秒；沒有選股排程。
+- [手機報表](https://papago2006.github.io/tw-stock-screener/)及8個資產HTTP 200，內容與新版匯出逐位元組一致。頁面新版版本號、390×844搜尋及KD明細與四種分類均通過，無水平溢出或觀測到的console錯誤。
+- 證據保留本機pages-live-validation-20261012.json；本次135項測試及21項保留／公開輸出核對通過。結果仍pending，外部KD與手機實機仍待驗收。
 
 狀態：2026-10-11依使用者明確授權，程式及待確認試算報表已上傳，GitHub Pages部署成功。手機入口為[台股選股 KD 觀察站](https://papago2006.github.io/tw-stock-screener/)。最新範圍及完成證據見SPEC第14節；每日選股排程與結果approve不在本次範圍。
 
