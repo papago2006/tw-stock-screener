@@ -7,8 +7,9 @@ from pathlib import Path
 import shutil
 
 
-def prepare(project, destination):
+def prepare(project, destination, site=None):
     project, destination = Path(project).resolve(strict=True), Path(destination).resolve()
+    site = Path(site).resolve(strict=True) if site is not None else project / "site"
     destination.mkdir(parents=True, exist_ok=False)
     shutil.copy2(project.parent / "AGENTS.md", destination / "AGENTS.md")
     workflow = destination / ".github/workflows/pages.yml"
@@ -44,7 +45,7 @@ def prepare(project, destination):
     for name in ("index.html", "styles.css", "app.js", "icon.svg", "manifest.webmanifest",
                  "data.js", "data.json", "selected.csv", ".nojekyll"):
         (target / "site").mkdir(exist_ok=True)
-        shutil.copy2(project / "site" / name, target / "site" / name)
+        shutil.copy2(site / name, target / "site" / name)
     files = [{"path": p.relative_to(destination).as_posix(), "bytes": p.stat().st_size,
               "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
              for p in sorted(destination.rglob("*")) if p.is_file()]
@@ -60,10 +61,11 @@ def prepare(project, destination):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--destination", type=Path)
+    parser.add_argument("--site", type=Path, help="Verified export directory; default: project/site")
     args = parser.parse_args()
     project = Path(__file__).resolve().parents[1]
     stamp = datetime.now(timezone(timedelta(hours=8))).strftime("%Y%m%d-%H%M%S")
     destination = args.destination or project / "release" / ("github-pages-" + stamp)
-    manifest = prepare(project, destination)
+    manifest = prepare(project, destination, args.site)
     print(json.dumps({"destination": str(destination), "files": len(manifest["files"]),
                       "total_bytes": manifest["total_bytes"]}))

@@ -3,12 +3,14 @@ from pathlib import Path
 import math
 import yaml
 from .models import DataError
+from .price_fallback import policy
 
 DEFAULT = {
     "selection": {"top_n": 300, "volume_ratio": 3.2},
     "kd": {"period": 26, "k_smoothing": 3, "d_smoothing": 3,
            "initial": 50.0, "warmup_periods": 60},
     "history": {"months": 120, "daily_months": 6, "weekly_months": 24},
+    "data_quality": {"ohlc_fallback": "official_daily"},
     "network": {"timeout": 30, "attempts": 3, "interval_seconds": 2.0,
                 "latest_search_days": 20},
     "paths": {"cache": "data/market.sqlite3", "raw": "data/raw", "output": "output",
@@ -54,5 +56,6 @@ def load_config(path=None):
         raise DataError("Invalid network interval or KD initial value")
     if cfg["history"]["months"] < cfg["kd"]["period"] + w + 1:
         raise DataError("History must cover monthly RSV, warmup and boundary month")
+    policy(cfg)
     cfg["paths"] = {k: str((base / v).resolve()) for k, v in cfg["paths"].items()}
     return cfg

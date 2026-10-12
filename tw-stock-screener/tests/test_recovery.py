@@ -2,6 +2,7 @@
 from copy import deepcopy
 from datetime import date
 from io import BytesIO, TextIOWrapper
+from http.client import IncompleteRead
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import gzip
@@ -67,6 +68,39 @@ class HistoricalFormatTests(unittest.TestCase):
 class ArchiveFailureTests(unittest.TestCase):
     def source(self, directory):
         return OfficialSource(dict(timeout=1, attempts=3, interval_seconds=0), directory)
+
+    def test_incomplete_response_retries_and_archives_only_complete_content(self):
+        class InterruptedResponse(BytesIO):
+            def read(self, *args):
+                raise IncompleteRead(b'{"partial":')
+
+        with TemporaryDirectory() as temp:
+            complete = b'{"test-only-complete-response": true}'
+            with patch("tw_stock_screener.sources.open_verified", side_effect=[
+                    InterruptedResponse(), BytesIO(complete)]) as http, \
+                 patch("tw_stock_screener.sources.time.sleep"):
+                self.assertEqual(self.source(temp).fetch("https://www.twse.com.tw/test"), complete)
+            self.assertEqual(http.call_count, 2)
+            files = list(Path(temp).rglob("*.gz"))
+            self.assertEqual(len(files), 1)
+            self.assertEqual(gzip.decompress(files[0].read_bytes()), complete)
+            records = (Path(temp) / "requests.jsonl").read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(records), 1)
+
+    def test_incomplete_response_exhausts_finite_budget_without_archiving(self):
+        class InterruptedResponse(BytesIO):
+            def read(self, *args):
+                raise IncompleteRead(b'{"partial":')
+
+        with TemporaryDirectory() as temp:
+            with patch("tw_stock_screener.sources.open_verified", side_effect=[
+                    InterruptedResponse() for _ in range(3)]) as http, \
+                 patch("tw_stock_screener.sources.time.sleep"):
+                with self.assertRaisesRegex(DataError, "Official API failed"):
+                    self.source(temp).fetch("https://www.twse.com.tw/test")
+            self.assertEqual(http.call_count, 3)
+            self.assertFalse(list(Path(temp).rglob("*.gz")))
+            self.assertFalse((Path(temp) / "requests.jsonl").exists())
 
     def test_atomic_archive_keeps_content_hash_and_provenance(self):
         with TemporaryDirectory() as temp:

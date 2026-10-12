@@ -30,6 +30,7 @@ class CheckedHistoryTests(unittest.TestCase):
             provider = CheckedDemandHistory(cache, source, date(2025, 9, 15), securities, DEFAULT)
             rows = source.monthly("TWSE", "2330", date(2025, 9, 1), provider.as_of)
             rows[0] = replace(rows[0], open=None)
+            source.daily = lambda market, day: [replace(rows[0], date=day)]
             with cache.db:
                 cache.db.execute("INSERT INTO stock_months VALUES (?,?,?,?,?)", ("TWSE", "2330", "2025-09-01", "2025-09-15", json.dumps([q.record() for q in rows])))
             source.history_calls.clear()

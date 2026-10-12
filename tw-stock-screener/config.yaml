@@ -11,6 +11,8 @@ history:
   months: 120
   daily_months: 6
   weekly_months: 24
+data_quality:
+  ohlc_fallback: official_daily
 network:
   timeout: 30
   attempts: 3

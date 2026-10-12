@@ -2,6 +2,7 @@
 from datetime import date
 from html import unescape
 from html.parser import HTMLParser
+from http.client import HTTPException
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
@@ -23,6 +24,15 @@ from .models import Quote, Security, DataError, NoData
 LOG = logging.getLogger(__name__)
 URLS = {"TWSE": "https://www.twse.com.tw/exchangeReport/MI_INDEX",
         "TPEX": "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes"}
+
+
+def daily_url(market, day):
+    if market not in URLS:
+        raise DataError(f"Unknown market: {market}")
+    params = ({"response": "json", "date": day.strftime("%Y%m%d"), "type": "ALLBUT0999"}
+              if market == "TWSE" else
+              {"response": "json", "date": day.strftime("%Y/%m/%d"), "id": ""})
+    return URLS[market] + "?" + urlencode(params)
 
 
 def open_verified(request, timeout):
@@ -239,7 +249,7 @@ class OfficialSource:
                                             "Accept": "application/json,text/html"})
                 with open_verified(req, timeout=self.network["timeout"]) as response:
                     content = response.read()
-            except (OSError, TimeoutError) as exc:
+            except (OSError, TimeoutError, HTTPException) as exc:
                 LOG.warning("request_failed url=%s attempt=%s error=%s", url, attempt + 1, exc)
                 if attempt + 1 == self.network["attempts"]:
                     raise DataError(f"Official API failed: {url}: {exc}") from exc
@@ -280,12 +290,7 @@ class OfficialSource:
                     LOG.warning("Could not remove incomplete raw temporary file: %s", temporary)
 
     def daily(self, market, day):
-        if market not in URLS:
-            raise DataError(f"Unknown market: {market}")
-        params = ({"response": "json", "date": day.strftime("%Y%m%d"), "type": "ALLBUT0999"}
-                  if market == "TWSE" else
-                  {"response": "json", "date": day.strftime("%Y/%m/%d"), "id": ""})
-        content = self.fetch(URLS[market] + "?" + urlencode(params))
+        content = self.fetch(daily_url(market, day))
         try:
             return parse_daily(market, day, json.loads(content))
         except (ValueError, TypeError, KeyError) as exc:

@@ -14,6 +14,7 @@ from . import __version__
 from .cache import resolve_date
 from .demand import DemandHistory
 from .models import DataError
+from .price_fallback import policy
 from .output import write_json
 from .screener import screen
 from .universe import load_universe
@@ -84,7 +85,10 @@ def run_screen(request, cfg, cache, source, today, history_factory=DemandHistory
     report = screen(as_of, quotes, securities, calendar, cfg,
                     stage_loader=stage_loader, volume_loader=volume_loader,
                     evaluation_limit=request.evaluation_limit)
+    quality = provider.price_fallback.report()
+    inputs["ohlc_fallback_sha256"] = fingerprint(quality)
     report.update({"status": "complete", "universe": metadata, "config": cfg,
+        "data_quality": quality,
         "history_mode": "on_demand_by_stage", "volume_unit": "shares",
         "history_months": {"daily": cfg["history"]["daily_months"],
                            "weekly": cfg["history"]["weekly_months"],
@@ -94,6 +98,7 @@ def run_screen(request, cfg, cache, source, today, history_factory=DemandHistory
         "provenance": {"schema_version": 1, "engine_version": __version__,
                        "engine_sha256": fingerprint({p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                                                       for p in sorted(Path(__file__).parent.glob("*.py"))}),
-                       "rules_sha256": fingerprint({k: cfg[k] for k in ["selection", "kd", "history"]}),
+                       "rules_sha256": fingerprint({**{k: cfg[k] for k in ["selection", "kd", "history"]},
+                                                    "data_quality": {"ohlc_fallback": policy(cfg)}}),
                        "inputs": inputs}})
     return report

@@ -20,6 +20,12 @@ OS鎖位於快取旁、程序結束自動釋放；不刪除鎖檔，避免並行
 
 每份工作在完整離線核對成功後才新增結果版本；若SQLite提交後匯出中斷，續跑會依工作ID找回該版本，避免誤批准或反覆新增相同工作版本。樣本仍禁止進入每日版本庫。完整報告有資料不足時標示complete_with_exclusions及pending，不能視為正式發布或無缺資料驗收。
 
+## 官方歷史價格備援
+
+`price_fallback.OfficialPriceFallback`獨立於KD及選股核心，透過既有Source.daily與Cache讀取同日官方日報。DemandHistory及CheckedDemandHistory在缺價檢查前使用它；正常月份、排名行情、成交量與原始月份payload不覆寫。未知／失敗資料保留，不能產生推估K棒。CheckedDemandHistory仍先檢查缺交易日，避免替不可能通過的缺日月份多抓日報。
+
+同一供應器共用日期請求與股票補缺記憶體；跨執行重用每日快取。報告`data_quality`保存原OHLC、補後OHLC、來源URL、日報列雜湊及未解原因；application將此內容納入輸入雜湊，將補缺政策納入規則雜湊，確保離線重播及跨版本比較能辨識資料政策差異。請求證據仍由原始回應存檔服務保存。新正式結果仍需明確確認，不將舊報告回寫為新政策。
+
 ## 呼叫方向
 
 ```text

@@ -11,6 +11,7 @@ import logging
 import shutil
 from .cache import MARKETS, months_before
 from .models import Quote, DataError
+from .price_fallback import OfficialPriceFallback
 
 LOG = logging.getLogger(__name__)
 
@@ -50,6 +51,8 @@ class DemandHistory:
         self.securities = {(s.market, s.code): s for s in securities}
         self.calendar_memory, self.month_memory = {}, {}
         self.precise_days = set()
+        self.price_fallback = OfficialPriceFallback(cache, source, as_of, config,
+                                                   offline, refresh, self.reserve)
         cache.db.executescript("""
           CREATE TABLE IF NOT EXISTS calendar_months (
             month TEXT PRIMARY KEY, through TEXT NOT NULL, payload TEXT NOT NULL);
@@ -146,7 +149,7 @@ class DemandHistory:
         expected = self.calendar(start, self.as_of)
         history = [q for m in months(start, self.as_of) for q in self.stock_month(market, code, m)
                    if start <= q.date <= self.as_of]
-        return history, expected
+        return self.price_fallback.complete(history), expected
 
     def previous_quote(self, market, code, previous):
         # Called only after all three KD stages passed. Exact volume from daily
@@ -192,16 +195,17 @@ class CheckedDemandHistory(DemandHistory):
                     if q["date"] <= str(self.as_of)]
         return None
 
-    @staticmethod
-    def _check_month(rows, expected):
+    def _check_month(self, rows, expected):
         observed = {q.date for q in rows}
         if len(observed) != len(rows):
             raise DataError("Duplicate history dates")
         missing = set(expected) - observed
         if missing:
             raise DataError(f"History missing {len(missing)} market sessions")
+        rows = self.price_fallback.complete(rows)
         if any(not q.valid_prices() for q in rows):
             raise DataError("Invalid/missing unadjusted OHLC")
+        return rows
 
     def stage(self, market, code, frame):
         start = self.start(market, code, frame)
@@ -221,7 +225,6 @@ class CheckedDemandHistory(DemandHistory):
         history = []
         for month in month_list:
             rows = [q for q in self.stock_month(market, code, month) if start <= q.date <= self.as_of]
-            self._check_month(rows, by_month.get(month, []))
-            history.extend(rows)
+            history.extend(self._check_month(rows, by_month.get(month, [])))
         return history, expected
 

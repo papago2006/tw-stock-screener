@@ -1,5 +1,11 @@
 # 第一個手機報表發布計畫
 
+## 2026-10-12新版更新
+
+依SPEC第16節授權，官方OHLC備援新版完整重算與8項離線核對已完成，準備更新同一Pages網址。版本4295d7354ce54d2bbc41dcaee4ef0e76仍待確認；9入選／136條件不符／155資料不足。107筆必要缺價均在官方同日日報仍缺OHLC，補回0；不能宣稱資料已補齊。
+
+新版網站匯出至`site-recompute-20261012-225856/`，舊`site/`保留。建立新發布包時指定`tools/prepare_github_release.py --site site-recompute-20261012-225856`；發布包中的`tw-stock-screener/site/`才是本次發布目標。完整重算與保留驗證見[RECOMPUTE_20261012.md](RECOMPUTE_20261012.md)。以下2026-10-11內容為首版發布紀錄，不能代替本次部署成功證據。
+
 狀態：2026-10-11依使用者明確授權，程式及待確認試算報表已上傳，GitHub Pages部署成功。手機入口為[台股選股 KD 觀察站](https://papago2006.github.io/tw-stock-screener/)。最新範圍及完成證據見SPEC第14節；每日選股排程與結果approve不在本次範圍。
 
 ## 手機現在怎麼使用
